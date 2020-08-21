@@ -2,7 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class TodoItem extends Component {
-    output = (completed) => this.props.todo.completed ? "Completed" : "Incomplete";
+
+    state= {
+        isChecked : false
+    }
+    
+    componentDidMount(){
+        if(this.props.todo.completed){
+            this.setState({
+                isChecked : true
+            })
+        }
+    }
+
+    strikeAndCheck = (event, id) => {
+        this.setState({
+            isChecked : !this.state.isChecked
+        })
+        this.props.markComplete(id, event);
+    }
     
     getStyle = () => {
         return {
@@ -22,10 +40,13 @@ class TodoItem extends Component {
     }
 
     render(){
-        const{id, title} = this.props.todo;
+        const{id, title, complete} = this.props.todo;
         return(
             <div style={this.getStyle()}>
-                <input type="checkbox" onChange={(event) => this.props.markComplete(id, event)}/>&nbsp;
+                <input 
+                type="checkbox" 
+                checked = {this.state.isChecked}
+                onChange={(event) => this.strikeAndCheck(event, id)}/>&nbsp;
                 {title}
                 <button 
                 style ={btnStyle} 
